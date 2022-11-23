@@ -2,12 +2,19 @@ package org.niwri.backgroundchanger;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.niwri.backgroundchanger.BackgroundImage;
+
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     ArrayList<BackgroundImage> backgroundImageArrayList = new ArrayList<BackgroundImage>();
 
+    int SELECT_PICTURE = 200;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     // this function is triggered when user
     // selects the image from the imageChooser
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
@@ -61,12 +69,8 @@ public class MainActivity extends AppCompatActivity {
                 Uri selectedImageUri = data.getData();
                 if (null != selectedImageUri) {
                     // update the preview image in the layout
-                    IVPreviewImage.setImageURI(selectedImageUri);
                 }
             }
         }
     }
-}
-
-
 }
