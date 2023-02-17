@@ -1,76 +1,73 @@
 package org.niwri.backgroundchanger;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.niwri.backgroundchanger.BackgroundImage;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.widget.ImageView;
+import android.widget.Switch;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
+
 public class MainActivity extends AppCompatActivity {
 
-    ArrayList<BackgroundImage> backgroundImageArrayList = new ArrayList<BackgroundImage>();
+    private ArrayList<BackgroundImage> backgroundList;
+    private RecyclerView recyclerView;
 
     int SELECT_PICTURE = 200;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        backgroundList = new ArrayList<BackgroundImage>();
+        recyclerView = findViewById(R.id.recyclerView);
+
+        setBackgroundInfo();
+        setAdapter();
+/*
+        Date thisDate = new Date( "Mon", 13, 14, 32);
+        TextView name = findViewById(R.id.backgroundName);
+        TextView date = findViewById(R.id.backgroundDate);
+        TextView time = findViewById(R.id.backgroundTime);
+        ImageView img = findViewById(R.id.backgroundImage);
+        Switch onOff = findViewById(R.id.backgroundEnable);
+
+        name.setText("Hu Tao");
+        date.setText("Every " + thisDate.getDay());
+        time.setText(thisDate.getHour() + ":" + thisDate.getMinute());
+        img.setImageBitmap(assetsToBitmap("hutao.png"));*/
+
     }
 
-    void switchBackground() {
-
-    }
-
-    void setTime() {
-
-    }
-
-    void enableBackground() {
-
-    }
-
-    void addBackground() {
-
-    }
-
-    void removeBackground() {
-
-    }
-
-    void imageChooser() {
-
-        // create an instance of the
-        // intent of the type image
-        Intent i = new Intent();
-        i.setType("image/*");
-        i.setAction(Intent.ACTION_GET_CONTENT);
-
-        // pass the constant to compare it
-        // with the returned requestCode
-        startActivityForResult(Intent.createChooser(i, "Select Picture"), SELECT_PICTURE);
-    }
-
-    // this function is triggered when user
-    // selects the image from the imageChooser
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK) {
-
-            // compare the resultCode with the
-            // SELECT_PICTURE constant
-            if (requestCode == SELECT_PICTURE) {
-                // Get the url of the image from data
-                Uri selectedImageUri = data.getData();
-                if (null != selectedImageUri) {
-                    // update the preview image in the layout
-                }
-            }
+    Bitmap assetsToBitmap(String fileName) {
+        try {
+            return BitmapFactory.decodeStream(getAssets().open(fileName));
+        } catch (Exception e) {
+            return null;
         }
+    }
+
+    private void setAdapter() {
+        RecyclerAdapter adapter = new RecyclerAdapter(backgroundList);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void setBackgroundInfo() {
+        backgroundList.add(new BackgroundImage("Hu Tao", assetsToBitmap("hutao.png"), new Date( "Mon", 13, 14, 32)));
     }
 }

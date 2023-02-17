@@ -1,5 +1,6 @@
 package org.niwri.backgroundchanger;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 
 import java.text.DateFormat;
@@ -8,39 +9,40 @@ public class BackgroundImage {
 
     private String backgroundName;
     private boolean enable;
-    private Uri backgroundPic;
-    private DateFormat backgroundDate;
+    private Bitmap backgroundBitmap;
+    private Date backgroundDate;
 
-    public BackgroundImage(String backgroundName, Uri backgroundPic) {
+    public BackgroundImage(String backgroundName, Bitmap backgroundBitmap, Date backgroundDate) {
         this.backgroundName = backgroundName;
-        this.backgroundPic = backgroundPic;
+        this.backgroundBitmap = backgroundBitmap;
+        this.backgroundDate = backgroundDate;
     }
 
+    //Setters
     public void setBackgroundName(String backgroundName) {
         this.backgroundName = backgroundName;
     }
 
-    public void setBackgroundPic(Uri backgroundPic) {
-        this.backgroundPic = backgroundPic;
-    }
+    public void setBackgroundPic(Bitmap backgroundBitmap) { this.backgroundBitmap = backgroundBitmap; }
 
-    public void setBackgroundDate(DateFormat backgroundDate) {
-        this.backgroundDate = backgroundDate;
-    }
+    public void setBackgroundDate(Date backgroundDate) { this.backgroundDate = backgroundDate; }
 
+    public void setEnabled(boolean enable) { this.enable = enable; }
 
+    //Getters
     public String getBackgroundName() {
         return backgroundName;
     }
 
-
-    public Uri getBackgroundPic() {
-        return backgroundPic;
+    public Bitmap getBackgroundBitmap() {
+        return backgroundBitmap;
     }
 
-    public DateFormat getBackgroundDate() {
+    public Date getBackgroundDate() {
         return backgroundDate;
     }
+
+    public boolean isEnabled() { return enable; }
 
 
 
