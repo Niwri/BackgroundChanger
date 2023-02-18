@@ -5,17 +5,16 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.niwri.backgroundchanger.BackgroundImage;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.widget.ImageView;
-import android.widget.Switch;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.ImageButton;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 
@@ -36,19 +35,8 @@ public class MainActivity extends AppCompatActivity {
 
         setBackgroundInfo();
         setAdapter();
-/*
-        Date thisDate = new Date( "Mon", 13, 14, 32);
-        TextView name = findViewById(R.id.backgroundName);
-        TextView date = findViewById(R.id.backgroundDate);
-        TextView time = findViewById(R.id.backgroundTime);
-        ImageView img = findViewById(R.id.backgroundImage);
-        Switch onOff = findViewById(R.id.backgroundEnable);
 
-        name.setText("Hu Tao");
-        date.setText("Every " + thisDate.getDay());
-        time.setText(thisDate.getHour() + ":" + thisDate.getMinute());
-        img.setImageBitmap(assetsToBitmap("hutao.png"));*/
-
+        setButtons();
     }
 
     Bitmap assetsToBitmap(String fileName) {
@@ -63,11 +51,61 @@ public class MainActivity extends AppCompatActivity {
         RecyclerAdapter adapter = new RecyclerAdapter(backgroundList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
+        SpacingItemDecorator itemSpacing = new SpacingItemDecorator(50);
+        recyclerView.addItemDecoration(itemSpacing);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
     }
 
     private void setBackgroundInfo() {
-        backgroundList.add(new BackgroundImage("Hu Tao", assetsToBitmap("hutao.png"), new Date( "Mon", 13, 14, 32)));
+        InputStream ims;
+        ArrayList<String> directoryList = new ArrayList<>();
+
+        try {
+            ims = getAssets().open("directoryList");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(ims));
+            String line;
+
+            while((line = reader.readLine()) != null)
+                directoryList.add(line);
+
+            System.out.println(line);
+
+            ims.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+
+        for(String directory : directoryList) {
+
+            try {
+                ims = getAssets().open(directory + "/information");
+                BufferedReader reader = new BufferedReader(new InputStreamReader(ims));
+                String name = reader.readLine();
+                String day = reader.readLine();
+                int hour = Integer.parseInt(reader.readLine());
+                int minute = Integer.parseInt(reader.readLine());
+                //Name
+
+                backgroundList.add(new BackgroundImage(name, assetsToBitmap(directory + "/image.png"), new Date(day, hour, minute, 0)));
+                ims.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
+    private void setButtons() {
+        ImageButton addBackground = findViewById(R.id.addBackground);
+
+        addBackground.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                startActivity(new Intent( MainActivity.this, BackgroundAddActivity.class));
+            }
+        });
     }
 }

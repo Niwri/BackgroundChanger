@@ -41,13 +41,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     @Override
     public RecyclerAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_items, parent, false);
+        RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        itemView.setLayoutParams(lp);
         return new MyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerAdapter.MyViewHolder holder, int position) {
         holder.nameTxt.setText(backgroundList.get(position).getBackgroundName());
-        holder.dateTxt.setText("Every" + backgroundList.get(position).getBackgroundDate().getDay());
+        holder.dateTxt.setText("Every " + backgroundList.get(position).getBackgroundDate().getDay());
         holder.timeTxt.setText(backgroundList.get(position).getBackgroundDate().getHour() + ":" + backgroundList.get(position).getBackgroundDate().getMinute());
         holder.backgroundImg.setImageBitmap(backgroundList.get(position).getBackgroundBitmap());
         holder.onOff.setChecked(backgroundList.get(position).isEnabled());
