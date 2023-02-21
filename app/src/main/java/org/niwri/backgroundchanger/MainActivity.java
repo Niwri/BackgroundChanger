@@ -13,6 +13,8 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -59,38 +61,24 @@ public class MainActivity extends AppCompatActivity {
 
     private void setBackgroundInfo() {
         InputStream ims;
-        ArrayList<String> directoryList = new ArrayList<>();
+        File parentDirectory = new File(getFilesDir(), "background-alarms");
+        if(!parentDirectory.exists())
+            parentDirectory.mkdir();
+        File[] backgroundDirectories = parentDirectory.listFiles();
 
-        try {
-            ims = getAssets().open("directoryList");
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(ims));
-            String line;
-
-            while((line = reader.readLine()) != null)
-                directoryList.add(line);
-
-            System.out.println(line);
-
-            ims.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }
-
-        for(String directory : directoryList) {
+        for(File directory : backgroundDirectories) {
 
             try {
-                ims = getAssets().open(directory + "/information");
-                BufferedReader reader = new BufferedReader(new InputStreamReader(ims));
+                FileInputStream information = new FileInputStream(new File(directory.getPath() + "\\information.txt"));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(information));
                 String name = reader.readLine();
                 String day = reader.readLine();
                 int hour = Integer.parseInt(reader.readLine());
                 int minute = Integer.parseInt(reader.readLine());
                 //Name
 
-                backgroundList.add(new BackgroundImage(name, assetsToBitmap(directory + "/image.png"), new Date(day, hour, minute, 0)));
-                ims.close();
+                backgroundList.add(new BackgroundImage(name, BitmapFactory.decodeFile(directory.getPath() + "\\image.png"), new Date(day, hour, minute, 0)));
+                information.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
