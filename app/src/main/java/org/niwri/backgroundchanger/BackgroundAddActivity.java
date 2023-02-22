@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -19,7 +20,9 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import org.w3c.dom.Text;
 
@@ -44,7 +47,10 @@ public class BackgroundAddActivity extends AppCompatActivity {
     private Button btnSave, btnBack;
     private Button[] btnDays;
     private boolean[] daysEnable;
+    private boolean enable;
 
+    int offColor = 0xff << 24 | 0x25 << 16 | 0x25 << 8 | 0x25;
+    int onColor = 0xff << 24 | 0x38 << 16 | 0xb8 << 8 | 0xfb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +62,7 @@ public class BackgroundAddActivity extends AppCompatActivity {
         backgroundName = "N/A";
         imageBitmap = null;
         Arrays.fill(daysEnable, false);
+        enable = true;
 
         //Retrieves necessary views from the layout
         backgroundNameField = findViewById(R.id.backgroundName);
@@ -99,12 +106,14 @@ public class BackgroundAddActivity extends AppCompatActivity {
         try {
             informationFile.createNewFile();
             fosInfo = new FileWriter(informationFile);
-            fosInfo.append(backgroundName + "\r\n");
+            fosInfo.append("Name:" + backgroundName + "\r\n");
+            fosInfo.append("Days:");
             for(int i = 0; i < daysEnable.length; i++)
                 fosInfo.append(daysEnable[i] + " ");
             fosInfo.append("\r\n");
-            fosInfo.append(hour + "\r\n");
-            fosInfo.append(Integer.toString(minute));
+            fosInfo.append("Hour:" + hour + "\r\n");
+            fosInfo.append("Minute:" + minute + "\r\n");
+            fosInfo.append("Enable:" + enable);
             fosInfo.close();
 
         } catch (FileNotFoundException e) {
@@ -164,11 +173,17 @@ public class BackgroundAddActivity extends AppCompatActivity {
         for(int i = 0; i < btnDays.length; i++) {
             int dayNum = i;
             btnDays[dayNum].setOnClickListener(new View.OnClickListener() {
+                  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
                   @Override
                   public void onClick(View view) {
                       //Flips between Red and Blue
                       daysEnable[dayNum] = !daysEnable[dayNum];
-                      btnDays[dayNum].setTextColor(daysEnable[dayNum] ? Color.BLUE : Color.RED);
+                      btnDays[dayNum].setTextColor(daysEnable[dayNum] ? onColor : offColor);
+                      btnDays[dayNum].setBackgroundTintList(
+                              ContextCompat.getColorStateList(
+                                      getApplicationContext(),
+                                      daysEnable[dayNum] ? R.color.onColorCircle : R.color.offColorCircle));
+
                   }
             });
           };
@@ -185,7 +200,11 @@ public class BackgroundAddActivity extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //Retrieving name field
                 backgroundName = backgroundNameField.getText().toString();
+
+                //Retrieving day enabled field
                 boolean dayExist = false;
                 for(int i = 0; i < daysEnable.length && !dayExist; i++)
                     if(daysEnable[i])
@@ -196,6 +215,11 @@ public class BackgroundAddActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Missing fields!", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
+                //Retrieving hour field
+
+                //Retrieving minute field
+
                 saveToAssets();
                 startActivity(new Intent(BackgroundAddActivity.this, MainActivity.class));
             }
@@ -260,6 +284,7 @@ public class BackgroundAddActivity extends AppCompatActivity {
         hour = intent.getIntExtra("hour", 0);
         minute = intent.getIntExtra("minute", 0);
         imageBitmap = BitmapFactory.decodeFile(intent.getStringExtra("imageFilePath"));
+        enable = intent.getBooleanExtra("enable", true);
 
         //Changes views with respect to the saved data
         backgroundNameField.setText(backgroundName);

@@ -11,11 +11,18 @@ public class BackgroundImage {
     private boolean enable;
     private Bitmap backgroundBitmap;
     private Date backgroundDate;
+    private String fileDirectory;
 
-    public BackgroundImage(String backgroundName, Bitmap backgroundBitmap, Date backgroundDate) {
+    public BackgroundImage(String backgroundName,
+                           Bitmap backgroundBitmap,
+                           Date backgroundDate,
+                           boolean enable,
+                           String fileDirectory) {
         this.backgroundName = backgroundName;
         this.backgroundBitmap = backgroundBitmap;
         this.backgroundDate = backgroundDate;
+        this.enable = enable;
+        this.fileDirectory = fileDirectory;
     }
 
     //Setters
@@ -28,6 +35,8 @@ public class BackgroundImage {
     public void setBackgroundDate(Date backgroundDate) { this.backgroundDate = backgroundDate; }
 
     public void setEnabled(boolean enable) { this.enable = enable; }
+
+    public void setFileDirectory(String fileDirectory) { this.fileDirectory = fileDirectory; }
 
     //Getters
     public String getBackgroundName() {
@@ -44,6 +53,6 @@ public class BackgroundImage {
 
     public boolean isEnabled() { return enable; }
 
-
+    public String getFileDirectory() { return fileDirectory; }
 
 }

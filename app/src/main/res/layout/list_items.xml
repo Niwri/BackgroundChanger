@@ -33,7 +33,7 @@
             android:layout_marginLeft="20dp"
             android:textSize="30sp"
             android:text="Time"
-            android:textColor="@android:color/white"
+            android:textColor="@color/onColorTxt"
             app:layout_constraintLeft_toRightOf="@+id/backgroundImage"
             app:layout_constraintTop_toTopOf="@+id/backgroundName"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -46,7 +46,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="10dp"
             android:text="Name"
-            android:textColor="@android:color/white"
+            android:textColor="@color/onColorTxt"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/backgroundTime"
             app:layout_constraintLeft_toRightOf="@+id/backgroundImage"/>

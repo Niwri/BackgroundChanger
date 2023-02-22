@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(itemSpacing);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
+
     }
 
     //Sets up an array list of background alarms for the RecyclerView
@@ -70,23 +71,26 @@ public class MainActivity extends AppCompatActivity {
 
                 FileInputStream information = new FileInputStream(infoFile);
                 BufferedReader reader = new BufferedReader(new InputStreamReader(information));
-                String name = reader.readLine();
+                String name = reader.readLine().replace("Name:", "");
                 boolean[] dayEnable = new boolean[7];
 
-                String[] dayString = reader.readLine().split(" ");
+                String[] dayString = reader.readLine().replace("Days:", "").split(" ");
                 for(int i = 0; i < dayString.length; i++) {
                     dayEnable[i] = false;
                     if(dayString[i].equals("true"))
                        dayEnable[i] = true;
                 }
-                int hour = Integer.parseInt(reader.readLine());
-                int minute = Integer.parseInt(reader.readLine());
+                int hour = Integer.parseInt(reader.readLine().replace("Hour:", ""));
+                int minute = Integer.parseInt(reader.readLine().replace("Minute:", ""));
+                boolean enable = reader.readLine().replace("Enable:", "").equals("true");
 
                 //Appends BackgroundImage generated from information and image file
                 backgroundList.add(new BackgroundImage(
                         name,
                         BitmapFactory.decodeFile(directory.getPath() + "/image.png"),
-                        new Date(dayEnable, hour, minute, 0)));
+                        new Date(dayEnable, hour, minute, 0),
+                        enable,
+                        directory.getPath()));
                 information.close();
             } catch (Exception e) {
                 e.printStackTrace();

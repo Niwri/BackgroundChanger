@@ -8,6 +8,12 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#777777</color>
+    <color name="offColor">#252525</color>
+    <color name="offColorCircle">#333333</color>
+    <color name="onColorCircle">#91d6fb</color>
+
+    <color name="onColorTxt">#ffffff</color>
+    <color name="offColorTxt">#888888</color>
 
     <dimen name="paddingOfWeekdayLetters">5dp</dimen>
     <dimen name="marginOfWeekdayLetters">10dp</dimen>

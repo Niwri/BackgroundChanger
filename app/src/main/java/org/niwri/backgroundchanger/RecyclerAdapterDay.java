@@ -16,8 +16,10 @@ public class RecyclerAdapterDay extends RecyclerView.Adapter<RecyclerAdapterDay.
 
     char[] dayChar = {'S', 'M', 'T', 'W', 'T', 'F', 'S'};
 
+    int offColor = 0xff << 24 | 0x55 << 16 | 0x55 << 8 | 0x55;
+    int onColor = 0xff << 24 | 0x38 << 16 | 0xb8 << 8 | 0xfb;
+
     public RecyclerAdapterDay(boolean[] daysEnable) {
-        System.out.println("Test1");
         this.daysEnable = daysEnable;
     }
 
@@ -34,7 +36,6 @@ public class RecyclerAdapterDay extends RecyclerView.Adapter<RecyclerAdapterDay.
     @NonNull
     @Override
     public RecyclerAdapterDay.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        System.out.println("Tes2");
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_weekdays, parent, false);
         return new MyViewHolder(itemView);
     }
@@ -43,12 +44,12 @@ public class RecyclerAdapterDay extends RecyclerView.Adapter<RecyclerAdapterDay.
     public void onBindViewHolder(@NonNull RecyclerAdapterDay.MyViewHolder holder, int position) {
         holder.txtWeekday.setText(String.valueOf(dayChar[position]));
 
-        holder.txtWeekday.setTextColor(0xff << 24 | 0x55 << 16 | 0x55 << 8 | 0x55);
+        holder.txtWeekday.setTextColor(offColor);
         holder.imgWeekday.setVisibility(View.INVISIBLE);
 
         if(daysEnable[position]) {
             //Sets color as #5555FF
-            holder.txtWeekday.setTextColor(0xff << 24 | 0x38 << 16 | 0xb8 << 8 | 0xfb);
+            holder.txtWeekday.setTextColor(onColor);
             holder.imgWeekday.setVisibility(View.VISIBLE);
         }
     }
