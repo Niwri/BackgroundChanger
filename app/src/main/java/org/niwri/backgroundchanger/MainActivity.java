@@ -25,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<BackgroundImage> backgroundList;
     private RecyclerView recyclerView;
 
+    private String[] days = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+
     int SELECT_PICTURE = 200;
 
     @Override
@@ -41,14 +43,7 @@ public class MainActivity extends AppCompatActivity {
         setButtons();
     }
 
-    Bitmap assetsToBitmap(String fileName) {
-        try {
-            return BitmapFactory.decodeStream(getAssets().open(fileName));
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
+    //Sets up RecyclerView for list of background alarms
     private void setAdapter() {
         RecyclerAdapter adapter = new RecyclerAdapter(backgroundList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -59,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
+    //Sets up an array list of background alarms for the RecyclerView
     private void setBackgroundInfo() {
         InputStream ims;
         File parentDirectory = new File(getFilesDir(), "background-alarms");
@@ -66,18 +62,31 @@ public class MainActivity extends AppCompatActivity {
             parentDirectory.mkdir();
         File[] backgroundDirectories = parentDirectory.listFiles();
 
+        //Iterates through all files in the parentDirectory
         for(File directory : backgroundDirectories) {
 
             try {
-                FileInputStream information = new FileInputStream(new File(directory.getPath() + "\\information.txt"));
+                File infoFile = new File(directory.getPath() + "/information.txt");
+
+                FileInputStream information = new FileInputStream(infoFile);
                 BufferedReader reader = new BufferedReader(new InputStreamReader(information));
                 String name = reader.readLine();
-                String day = reader.readLine();
+                boolean[] dayEnable = new boolean[7];
+
+                String[] dayString = reader.readLine().split(" ");
+                for(int i = 0; i < dayString.length; i++) {
+                    dayEnable[i] = false;
+                    if(dayString[i].equals("true"))
+                       dayEnable[i] = true;
+                }
                 int hour = Integer.parseInt(reader.readLine());
                 int minute = Integer.parseInt(reader.readLine());
-                //Name
 
-                backgroundList.add(new BackgroundImage(name, BitmapFactory.decodeFile(directory.getPath() + "\\image.png"), new Date(day, hour, minute, 0)));
+                //Appends BackgroundImage generated from information and image file
+                backgroundList.add(new BackgroundImage(
+                        name,
+                        BitmapFactory.decodeFile(directory.getPath() + "/image.png"),
+                        new Date(dayEnable, hour, minute, 0)));
                 information.close();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -87,11 +96,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //Sets up the Add Background button
     private void setButtons() {
-        ImageButton addBackground = findViewById(R.id.addBackground);
+        ImageButton addBackground = findViewById(R.id.btnAddBackground);
 
         addBackground.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                Intent intent = new Intent( MainActivity.this, BackgroundAddActivity.class);
+                intent.putExtra("loadData", false);
                 startActivity(new Intent( MainActivity.this, BackgroundAddActivity.class));
             }
         });

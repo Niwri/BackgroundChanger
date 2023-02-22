@@ -6,6 +6,7 @@ import android.content.res.AssetManager;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,25 +31,41 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 
 public class BackgroundAddActivity extends AppCompatActivity {
     private String backgroundName;
-    private String day;
     private int hour, minute;
     private Bitmap imageBitmap;
 
-    private String[] days = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+
+    private EditText backgroundNameField;
+    private ImageButton btnImage;
+    private Button btnSave, btnBack;
+    private Button[] btnDays;
+    private boolean[] daysEnable;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_background);
 
-        day = "N/A";
+        //Loads default values
+        daysEnable = new boolean[7];
         backgroundName = "N/A";
         imageBitmap = null;
+        Arrays.fill(daysEnable, false);
 
+        //Retrieves necessary views from the layout
+        backgroundNameField = findViewById(R.id.backgroundName);
         setButtons();
+
+        //If edit mode, load existing data to write over
+        Intent intent = getIntent();
+        if(intent.getBooleanExtra("loadData", false))
+            loadExistingData();
+
     }
 
     //Creates a new directory in background-alarms folder.
@@ -68,7 +85,6 @@ public class BackgroundAddActivity extends AppCompatActivity {
             return;
         }
 
-        System.out.println("Test1");
         do {
             int backgroundFolderId = (int) (Math.random() * (100000));
             childDirectory = new File(parentDirectory, "background_" + backgroundFolderId);
@@ -78,13 +94,15 @@ public class BackgroundAddActivity extends AppCompatActivity {
 
         //Creates and writes background name and time into a text file
         FileWriter fosInfo = null;
-        File informationFile = new File(childDirectory, "\\information.txt");
+        File informationFile = new File(childDirectory, "/information.txt");
 
         try {
             informationFile.createNewFile();
             fosInfo = new FileWriter(informationFile);
             fosInfo.append(backgroundName + "\r\n");
-            fosInfo.append(day + "\r\n");
+            for(int i = 0; i < daysEnable.length; i++)
+                fosInfo.append(daysEnable[i] + " ");
+            fosInfo.append("\r\n");
             fosInfo.append(hour + "\r\n");
             fosInfo.append(Integer.toString(minute));
             fosInfo.close();
@@ -103,10 +121,8 @@ public class BackgroundAddActivity extends AppCompatActivity {
             }
         }
 
-        System.out.println("Test2");
-
         //Copies image from gallery into background directory
-        File imgFile = new File(childDirectory, "\\image.png");
+        File imgFile = new File(childDirectory, "/image.png");
         FileOutputStream fosImg = null;
 
         try {
@@ -128,8 +144,6 @@ public class BackgroundAddActivity extends AppCompatActivity {
             }
         }
 
-        System.out.println("Test3");
-
         //Goes back to main activity
         Toast.makeText(getApplicationContext(), "Saved " + backgroundName, Toast.LENGTH_SHORT).show();
 
@@ -139,10 +153,10 @@ public class BackgroundAddActivity extends AppCompatActivity {
     }
 
     private void setButtons() {
-        Button btnBack = findViewById(R.id.btnBack);
-        Button btnSave = findViewById(R.id.btnSave);
-        ImageButton btnImage = findViewById(R.id.btnImage);
-        Button[] btnDays = {findViewById(R.id.btnSunday), findViewById(R.id.btnMonday), findViewById(R.id.btnTuesday),
+        btnBack = findViewById(R.id.btnBack);
+        btnSave = findViewById(R.id.btnSave);
+        btnImage = findViewById(R.id.btnImage);
+        btnDays = new Button[]{findViewById(R.id.btnSunday), findViewById(R.id.btnMonday), findViewById(R.id.btnTuesday),
                 findViewById(R.id.btnWednesday), findViewById(R.id.btnThursday), findViewById(R.id.btnFriday),
                 findViewById(R.id.btnSaturday)};
 
@@ -153,8 +167,8 @@ public class BackgroundAddActivity extends AppCompatActivity {
                   @Override
                   public void onClick(View view) {
                       //Flips between Red and Blue
-                      day = days[dayNum];
-                      btnDays[dayNum].setTextColor(btnDays[dayNum].getCurrentTextColor() == Color.RED ? Color.BLUE : Color.RED);
+                      daysEnable[dayNum] = !daysEnable[dayNum];
+                      btnDays[dayNum].setTextColor(daysEnable[dayNum] ? Color.BLUE : Color.RED);
                   }
             });
           };
@@ -171,11 +185,13 @@ public class BackgroundAddActivity extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditText backgroundNameField = findViewById(R.id.backgroundName);
                 backgroundName = backgroundNameField.getText().toString();
-
-                if(day == "N/A" || backgroundName == "N/A" || imageBitmap == null) {
-                    System.out.println(day);
+                boolean dayExist = false;
+                for(int i = 0; i < daysEnable.length && !dayExist; i++)
+                    if(daysEnable[i])
+                        dayExist = true;
+                if(!dayExist || backgroundName == "N/A" || imageBitmap == null) {
+                    System.out.println(daysEnable);
                     System.out.println(backgroundName);
                     Toast.makeText(getApplicationContext(), "Missing fields!", Toast.LENGTH_SHORT).show();
                     return;
@@ -204,12 +220,12 @@ public class BackgroundAddActivity extends AppCompatActivity {
 
         // pass the constant to compare it
         // with the returned requestCode
-        startActivity(Intent.createChooser(i, "Select Picture"));
+        startActivityForResult(Intent.createChooser(i, "Select Picture"), 200);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        System.out.println("Got result");
         if (resultCode == RESULT_OK) {
 
             // compare the resultCode with the
@@ -219,11 +235,35 @@ public class BackgroundAddActivity extends AppCompatActivity {
                 Uri selectedImageUri = data.getData();
                 if (null != selectedImageUri) {
                     // update the preview image in the layout
+                    System.out.println("Received");
                     ImageButton btnImage = findViewById(R.id.btnImage);
+
+                    try {
+                        imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    btnImage.setImageURI(null);
                     btnImage.setImageURI(selectedImageUri);
                 }
             }
         }
+    }
+
+    private void loadExistingData() {
+
+        //Loads saved data to variables
+        Intent intent = getIntent();
+        backgroundName = intent.getStringExtra("backgroundName");
+        daysEnable = intent.getBooleanArrayExtra("daysEnable");
+        hour = intent.getIntExtra("hour", 0);
+        minute = intent.getIntExtra("minute", 0);
+        imageBitmap = BitmapFactory.decodeFile(intent.getStringExtra("imageFilePath"));
+
+        //Changes views with respect to the saved data
+        backgroundNameField.setText(backgroundName);
+
     }
 
 }

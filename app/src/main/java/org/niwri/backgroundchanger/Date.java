@@ -1,20 +1,20 @@
 package org.niwri.backgroundchanger;
 
 public class Date {
-    private String day;
+    private boolean[] days;
     private int hour;
     private int minute;
     private int second;
 
-    public Date(String day, int hour, int minute, int second) {
-        this.day = day;
+    public Date(boolean[] days, int hour, int minute, int second) {
+        this.days = days;
         this.hour = hour;
         this.minute = minute;
         this.second = second;
     }
 
     //Getters
-    public String getDay() { return day; }
+    public boolean[] getDay() { return days; }
 
     public int getHour() { return hour; }
 
@@ -23,7 +23,7 @@ public class Date {
     public int getSecond() { return second; }
 
     //Setters
-    public void setDay(String day) { this.day = day; }
+    public void setDay(boolean[] days) { this.days = days; }
 
     public void setHour(int hour) { this.hour = hour; }
 
