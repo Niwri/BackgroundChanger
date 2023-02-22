@@ -12,8 +12,7 @@ Got lazy doing so, decided to make an app that does it for me.
 ![https://www.figma.com/file/h3NRb3hD95pVVWUHGbrHyg/Background-Changer?node-id=0%3A1&t=Jbg6GkmsJAG6ZINx-1](https://i.ibb.co/hg2fm9T/Screenshot-2023-02-22-174447.png)
 
 ## Current Work
-![https://ibb.co/p4QNPG0](https://i.ibb.co/P1MJY3m/device-2023-02-22-175315.png)
-![https://ibb.co/TYLVmvz](https://i.ibb.co/Cm2kh1x/device-2023-02-22-180049.png)
+![[https://ibb.co/p4QNPG0](https://i.ibb.co/P4G3j8x/yes.png)
 
 ## Programming Languages, Tools & Frameworks
 - Java
