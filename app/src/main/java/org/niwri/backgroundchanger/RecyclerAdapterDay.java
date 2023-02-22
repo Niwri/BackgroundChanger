@@ -1,41 +1,60 @@
 package org.niwri.backgroundchanger;
 
+import android.graphics.Color;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class RecyclerAdapterDay extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {
+public class RecyclerAdapterDay extends RecyclerView.Adapter<RecyclerAdapterDay.MyViewHolder> {
 
     boolean[] daysEnable;
+
+    char[] dayChar = {'S', 'M', 'T', 'W', 'T', 'F', 'S'};
+
     public RecyclerAdapterDay(boolean[] daysEnable) {
+        System.out.println("Test1");
         this.daysEnable = daysEnable;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView txtWeekday;
-        public MyViewHolder(final View view) {
+        private ImageView imgWeekday;
+        MyViewHolder(final View view) {
             super(view);
             txtWeekday = view.findViewById(R.id.txtWeekday);
+            imgWeekday = view.findViewById(R.id.imgWeekday);
         }
     }
 
     @NonNull
     @Override
-    public RecyclerAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        return null;
+    public RecyclerAdapterDay.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        System.out.println("Tes2");
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_weekdays, parent, false);
+        return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerAdapterDay.MyViewHolder holder, int position) {
+        holder.txtWeekday.setText(String.valueOf(dayChar[position]));
 
+        holder.txtWeekday.setTextColor(0xff << 24 | 0x55 << 16 | 0x55 << 8 | 0x55);
+        holder.imgWeekday.setVisibility(View.INVISIBLE);
+
+        if(daysEnable[position]) {
+            //Sets color as #5555FF
+            holder.txtWeekday.setTextColor(0xff << 24 | 0x38 << 16 | 0xb8 << 8 | 0xfb);
+            holder.imgWeekday.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return daysEnable.length;
     }
 }

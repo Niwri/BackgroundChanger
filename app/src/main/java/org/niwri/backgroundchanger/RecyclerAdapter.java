@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -29,12 +31,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         private ImageView backgroundImg;
         private ConstraintLayout constraintBackground;
         private Switch onOff;
+        private RecyclerView recyclerView;
 
-        public MyViewHolder(final View view) {
+        MyViewHolder(final View view) {
             super(view);
 
             nameTxt = view.findViewById(R.id.backgroundName);
-            dateTxt = view.findViewById(R.id.backgroundDate);
+            recyclerView = view.findViewById(R.id.backgroundDate);
             timeTxt = view.findViewById(R.id.backgroundTime);
             backgroundImg = view.findViewById(R.id.backgroundImage);
             onOff = view.findViewById(R.id.backgroundEnable);
@@ -47,15 +50,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     @Override
     public RecyclerAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_items, parent, false);
-        RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        itemView.setLayoutParams(lp);
         return new MyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerAdapter.MyViewHolder holder, int position) {
         holder.nameTxt.setText(backgroundList.get(position).getBackgroundName());
-        holder.dateTxt.setText("Every " + backgroundList.get(position).getBackgroundDate().getDay());
         holder.timeTxt.setText(backgroundList.get(position).getBackgroundDate().getHour() + ":" + backgroundList.get(position).getBackgroundDate().getMinute());
         holder.backgroundImg.setImageBitmap(backgroundList.get(position).getBackgroundBitmap());
         holder.onOff.setChecked(backgroundList.get(position).isEnabled());
@@ -67,6 +67,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
                Toast.makeText(parentContext, "Test", Toast.LENGTH_SHORT);
            }
         });
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(holder.recyclerView.getContext(), LinearLayoutManager.HORIZONTAL, false);
+        layoutManager.setInitialPrefetchItemCount(backgroundList.get(position).getBackgroundDate().getDay().length);
+        holder.recyclerView.setLayoutManager(layoutManager);
+        RecyclerAdapterDay adapter = new RecyclerAdapterDay(backgroundList.get(position).getBackgroundDate().getDay());
+        holder.recyclerView.setAdapter(adapter);
+        holder.recyclerView.setItemAnimator(new DefaultItemAnimator());
+
     }
 
     @Override
@@ -74,7 +82,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         super.onAttachedToRecyclerView(recyclerView);
         parentContext = recyclerView.getContext();
     }
-
 
     @Override
     public int getItemCount() {
