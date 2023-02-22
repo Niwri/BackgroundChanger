@@ -1,6 +1,6 @@
 # BackgroundChanger
 ## Status
-NOT COMPLETED
+NOT READY
 
 ## Description
 A mobile application that allows the user to change their phone background at specific times automatically.
@@ -18,6 +18,7 @@ Got lazy doing so, decided to make an app that does it for me.
 ## Programming Languages, Tools & Frameworks
 - Java
 - Android Studio (Supports API 19)
+- XML
 
 ## Plans
 Features that are implemented:
