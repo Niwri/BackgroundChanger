@@ -48,6 +48,8 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:id="@+id/btnImage"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
             android:background="@drawable/image_icon"/>
 
         <EditText

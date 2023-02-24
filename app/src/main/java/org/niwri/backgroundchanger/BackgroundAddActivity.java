@@ -270,6 +270,7 @@ public class BackgroundAddActivity extends AppCompatActivity {
 
                     btnImage.setImageURI(null);
                     btnImage.setImageURI(selectedImageUri);
+                    btnImage.setBackgroundResource(0);
                 }
             }
         }
