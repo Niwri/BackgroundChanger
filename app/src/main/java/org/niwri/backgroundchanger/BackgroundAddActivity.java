@@ -7,7 +7,12 @@ import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.graphics.Shader;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -43,6 +48,7 @@ public class BackgroundAddActivity extends AppCompatActivity {
 
 
     private EditText backgroundNameField;
+    private String directory;
     private ImageButton btnImage;
     private Button btnSave, btnBack;
     private Button[] btnDays;
@@ -84,7 +90,7 @@ public class BackgroundAddActivity extends AppCompatActivity {
         if(!parentDirectory.exists())
             parentDirectory.mkdir();
 
-
+        boolean loadData = getIntent().getBooleanExtra("loadData", false);
         //Creates background_(random unique id) folder for storing data
         File childDirectory;
         if(parentDirectory.listFiles().length >= 500) {
@@ -92,20 +98,30 @@ public class BackgroundAddActivity extends AppCompatActivity {
             return;
         }
 
-        do {
-            int backgroundFolderId = (int) (Math.random() * (100000));
-            childDirectory = new File(parentDirectory, "background_" + backgroundFolderId);
-        } while (childDirectory.exists());
+        if(loadData) {
+            childDirectory = new File(directory);
 
-        childDirectory.mkdir();
+        } else {
+            do {
+                int backgroundFolderId = (int) (Math.random() * (100000));
+                directory = "background_" + backgroundFolderId;
+                childDirectory = new File(parentDirectory, directory);
+            } while (childDirectory.exists());
+
+            childDirectory.mkdir();
+        }
+
+
+
 
         //Creates and writes background name and time into a text file
         FileWriter fosInfo = null;
         File informationFile = new File(childDirectory, "/information.txt");
 
         try {
-            informationFile.createNewFile();
-            fosInfo = new FileWriter(informationFile);
+            if(!loadData)
+                informationFile.createNewFile();
+            fosInfo = new FileWriter(informationFile, false);
             fosInfo.append("Name:" + backgroundName + "\r\n");
             fosInfo.append("Days:");
             for(int i = 0; i < daysEnable.length; i++)
@@ -135,7 +151,7 @@ public class BackgroundAddActivity extends AppCompatActivity {
         FileOutputStream fosImg = null;
 
         try {
-            fosImg = new FileOutputStream(imgFile);
+            fosImg = new FileOutputStream(imgFile, false);
             imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, fosImg);
             fosImg.flush();
             fosImg.close();
@@ -268,8 +284,15 @@ public class BackgroundAddActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
+                    Bitmap imageRounded=Bitmap.createBitmap(imageBitmap.getWidth(), imageBitmap.getHeight(), imageBitmap.getConfig());
+                    Canvas canvas=new Canvas(imageRounded);
+                    Paint mpaint=new Paint();
+                    mpaint.setAntiAlias(true);
+                    mpaint.setShader(new BitmapShader(imageBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
+                    canvas.drawRoundRect((new RectF(0, 0, imageBitmap.getWidth(), imageBitmap.getHeight())), imageBitmap.getWidth()*0.3f, imageBitmap.getHeight()*0.3f, mpaint); // Round Image Corner 100 100 100 100
+
                     btnImage.setImageURI(null);
-                    btnImage.setImageURI(selectedImageUri);
+                    btnImage.setImageBitmap(imageRounded);
                     btnImage.setBackgroundResource(0);
                 }
             }
@@ -286,9 +309,38 @@ public class BackgroundAddActivity extends AppCompatActivity {
         minute = intent.getIntExtra("minute", 0);
         imageBitmap = BitmapFactory.decodeFile(intent.getStringExtra("imageFilePath"));
         enable = intent.getBooleanExtra("enable", true);
+        directory = getIntent().getStringExtra("directoryName");
 
         //Changes views with respect to the saved data
         backgroundNameField.setText(backgroundName);
+
+        btnImage.setImageURI(null);
+        btnImage.setBackgroundResource(0);
+
+        Bitmap imageRounded=Bitmap.createBitmap(imageBitmap.getWidth(), imageBitmap.getHeight(), imageBitmap.getConfig());
+        Canvas canvas=new Canvas(imageRounded);
+        Paint mpaint=new Paint();
+        mpaint.setAntiAlias(true);
+        mpaint.setShader(new BitmapShader(imageBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
+        canvas.drawRoundRect((new RectF(0, 0, imageBitmap.getWidth(), imageBitmap.getHeight())), imageBitmap.getWidth()*0.3f, imageBitmap.getHeight()*0.3f, mpaint); // Round Image Corner 100 100 100 100
+
+
+        btnImage.setImageBitmap(imageRounded);
+
+        btnDays = new Button[]{findViewById(R.id.btnSunday), findViewById(R.id.btnMonday), findViewById(R.id.btnTuesday),
+                findViewById(R.id.btnWednesday), findViewById(R.id.btnThursday), findViewById(R.id.btnFriday),
+                findViewById(R.id.btnSaturday)};
+
+        for(int i = 0; i < btnDays.length; i++) {
+            int dayNum = i;
+            btnDays[dayNum].setTextColor(daysEnable[dayNum] ? onColor : offColor);
+            btnDays[dayNum].setBackgroundTintList(
+                    ContextCompat.getColorStateList(
+                            getApplicationContext(),
+                            daysEnable[dayNum] ? R.color.onColorCircle : R.color.offColorCircle));
+        }
+
+
 
     }
 

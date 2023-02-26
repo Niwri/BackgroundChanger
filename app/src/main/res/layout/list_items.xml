@@ -9,16 +9,17 @@
         android:id="@+id/backgroundContainer"
         android:clickable="true"
         android:layout_width="380dp"
-        android:layout_height="96dp"
-        android:background="@drawable/module_background">
+        android:layout_height="96dp">
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <ImageView
             android:id="@+id/backgroundImage"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
+            android:scaleType="fitXY"
+            android:adjustViewBounds="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:src="@drawable/image_icon"
@@ -53,6 +54,7 @@
 
         <Switch
             android:id="@+id/backgroundEnable"
+            android:visibility="gone"
             android:layout_width="42dp"
             android:layout_height="43dp"
             android:layout_marginEnd="16dp"
@@ -60,6 +62,22 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
+        <RadioButton
+            android:id="@+id/radioDelete"
+            android:visibility="visible"
+            android:layout_width="42dp"
+            android:layout_height="43dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier"
+            app:barrierDirection="left"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            app:constraint_referenced_ids="radioDelete, backgroundEnable"/>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/backgroundDate"
             android:layout_width="wrap_content"
@@ -68,7 +86,7 @@
             android:text="Date"
             android:textColor="@android:color/white"
             app:layout_constraintBottom_toBottomOf="@+id/backgroundContainer"
-            app:layout_constraintEnd_toStartOf="@+id/backgroundEnable"
+            app:layout_constraintEnd_toStartOf="@+id/barrier"
             app:layout_constraintTop_toTopOf="@+id/backgroundContainer">
         </androidx.recyclerview.widget.RecyclerView>
 

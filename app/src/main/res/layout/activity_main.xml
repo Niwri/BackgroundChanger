@@ -40,7 +40,8 @@
             <View
                 android:layout_width="1dp"
                 android:layout_height="50dp"
-                android:layout_marginHorizontal="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="10dp"
                 android:background="@drawable/line"
                 android:backgroundTint="#eeeeee"
                 app:layout_constraintTop_toBottomOf="@+id/linearStart"
@@ -49,12 +50,13 @@
             <ImageButton
                 android:id="@+id/btnAddBackground"
                 android:layout_width="46dp"
+                android:layout_marginRight="5dp"
                 android:layout_height="44dp"
                 android:backgroundTint="#aaaaaa"
                 android:background="@drawable/add_icon"/>
 
             <ImageButton
-                android:id="@+id/btnDeleteActivity"
+                android:id="@+id/btnDeleteBackground"
                 android:layout_width="46dp"
                 android:layout_height="44dp"
                 android:backgroundTint="#aaaaaa"
@@ -89,6 +91,18 @@
         </LinearLayout>
 
     </LinearLayout>
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:id="@+id/btnDeleteItems"
+        android:text="Delete Items"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="40dp"/>
 
 
 

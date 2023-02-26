@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 
 import java.io.BufferedReader;
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayList<BackgroundImage> backgroundList;
     private RecyclerView recyclerView;
+    public static ArrayList<RecyclerAdapter.MyViewHolder> holderList;
 
     private String[] days = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
 
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         backgroundList = new ArrayList<BackgroundImage>();
+        holderList = new ArrayList<RecyclerAdapter.MyViewHolder>();
         recyclerView = findViewById(R.id.recyclerView);
 
         setBackgroundInfo();
@@ -46,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     //Sets up RecyclerView for list of background alarms
     private void setAdapter() {
         RecyclerAdapter adapter = new RecyclerAdapter(backgroundList);
+
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         SpacingItemDecorator itemSpacing = new SpacingItemDecorator(50);
@@ -102,14 +106,40 @@ public class MainActivity extends AppCompatActivity {
 
     //Sets up the Add Background button
     private void setButtons() {
-        ImageButton addBackground = findViewById(R.id.btnAddBackground);
+        ImageButton btnAddBackground = findViewById(R.id.btnAddBackground);
+        ImageButton btnDeleteBackground = findViewById(R.id.btnDeleteBackground);
+        Button btnDeleteItems = findViewById(R.id.btnDeleteItems);
 
-        addBackground.setOnClickListener(new View.OnClickListener() {
+        btnAddBackground.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent intent = new Intent( MainActivity.this, BackgroundAddActivity.class);
                 intent.putExtra("loadData", false);
                 startActivity(new Intent( MainActivity.this, BackgroundAddActivity.class));
             }
         });
+
+        btnDeleteBackground.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                for(RecyclerAdapter.MyViewHolder holder : holderList) {
+                    boolean enable = holder.onOff.getVisibility() == View.VISIBLE;
+                    holder.onOff.setVisibility(enable ? View.GONE : View.VISIBLE);
+                    holder.radioDelete.setVisibility(enable ? View.VISIBLE : View.GONE);
+                    btnDeleteItems.setVisibility(enable ? View.VISIBLE : View.GONE);
+                }
+            }
+        });
+
+        btnDeleteItems.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                for(RecyclerAdapter.MyViewHolder holder: holderList) {
+                    holder.radioDelete.isActivated();
+                    holder.
+                }
+            })
+        });
+    }
+
+    public static void addHolder(RecyclerAdapter.MyViewHolder holder) {
+        holderList.add(holder);
     }
 }

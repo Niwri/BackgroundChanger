@@ -1,11 +1,20 @@
 package org.niwri.backgroundchanger;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +51,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         private TextView nameTxt, dateTxt, timeTxt;
         private ImageView backgroundImg;
         private ConstraintLayout constraintBackground;
-        private Switch onOff;
+        public Switch onOff;
+        public RadioButton radioDelete;
         private RecyclerView recyclerView;
 
         MyViewHolder(final View view) {
@@ -53,6 +63,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
             timeTxt = view.findViewById(R.id.backgroundTime);
             backgroundImg = view.findViewById(R.id.backgroundImage);
             onOff = view.findViewById(R.id.backgroundEnable);
+            radioDelete = view.findViewById(R.id.radioDelete);
             constraintBackground = view.findViewById(R.id.backgroundContainer);
 
         }
@@ -71,7 +82,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         holder.timeTxt.setText(String.format("%02d", backgroundList.get(position).getBackgroundDate().getHour())
                 + ":" +
                 String.format("%02d", backgroundList.get(position).getBackgroundDate().getMinute()));
-        holder.backgroundImg.setImageBitmap(backgroundList.get(position).getBackgroundBitmap());
+
+        Bitmap mbitmap = backgroundList.get(position).getBackgroundBitmap();
+        Bitmap imageRounded=Bitmap.createBitmap(mbitmap.getWidth(), mbitmap.getHeight(), mbitmap.getConfig());
+        Canvas canvas=new Canvas(imageRounded);
+        Paint mpaint=new Paint();
+        mpaint.setAntiAlias(true);
+        mpaint.setShader(new BitmapShader(mbitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
+        canvas.drawRoundRect((new RectF(0, 0, mbitmap.getWidth(), mbitmap.getHeight())), mbitmap.getWidth()*0.3f, mbitmap.getHeight()*0.3f, mpaint); // Round Image Corner 100 100 100 100
+
+        holder.backgroundImg.setImageBitmap(imageRounded);
         holder.onOff.setChecked(backgroundList.get(position).isEnabled());
 
         holder.nameTxt.setTextColor(ContextCompat.getColorStateList(
@@ -87,6 +107,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
                 backgroundList.get(holder.getAdapterPosition()).setEnabled(b);
 
                 holder.nameTxt.setTextColor(ContextCompat.getColorStateList(
@@ -124,14 +145,27 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
                     e.printStackTrace();
                 }
 
+
             }
         });
 
         holder.constraintBackground.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
+               int positionNum = holder.getAdapterPosition();
                System.out.println("Test");
-               Toast.makeText(parentContext, "Test", Toast.LENGTH_SHORT);
+               Intent intent = new Intent(view.getContext(), BackgroundAddActivity.class);
+               intent.putExtra("loadData", true);
+               intent.putExtra("backgroundName", backgroundList.get(positionNum).getBackgroundName());
+               intent.putExtra("daysEnable", backgroundList.get(positionNum).getBackgroundDate().getDay());
+               intent.putExtra("hour", backgroundList.get(positionNum).getBackgroundDate().getHour());
+               intent.putExtra("minute", backgroundList.get(positionNum).getBackgroundDate().getMinute());
+               intent.putExtra("imageFilePath", backgroundList.get(positionNum).getFileDirectory() + "/image.png");
+               intent.putExtra("enable", backgroundList.get(positionNum).isEnabled());
+               intent.putExtra("directoryName", backgroundList.get(positionNum).getFileDirectory());
+
+               view.getContext().startActivity(intent);
+
            }
         });
 
@@ -143,6 +177,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         holder.recyclerView.setAdapter(adapter);
         holder.recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        MainActivity.addHolder(holder);
     }
 
     @Override
@@ -155,4 +190,5 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     public int getItemCount() {
         return backgroundList.size();
     }
+
 }
