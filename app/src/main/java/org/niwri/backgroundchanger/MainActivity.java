@@ -132,14 +132,34 @@ public class MainActivity extends AppCompatActivity {
         btnDeleteItems.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 for(RecyclerAdapter.MyViewHolder holder: holderList) {
-                    holder.radioDelete.isActivated();
-                    holder.
-                }
-            })
+                    if(!holder.radioDelete.isChecked()) {
+                        System.out.println("Skipped"); // Temp
+                        continue;
+                    }
+                    File directoryToDelete = new File(holder.directoryPath);
+                    deleteFile(directoryToDelete); //Fix to delete file
+                    System.out.println(directoryToDelete.exists()); // Temp
+                    System.out.println(directoryToDelete.getPath()); // Temp
+
+
+
+                };
+
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            }
         });
     }
 
     public static void addHolder(RecyclerAdapter.MyViewHolder holder) {
         holderList.add(holder);
+    }
+
+    void deleteFile(File file) {
+        if(file.isDirectory())
+            for(File child : file.listFiles())
+                deleteFile(child);
+
+        file.delete();
+
     }
 }

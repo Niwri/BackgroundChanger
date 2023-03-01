@@ -55,7 +55,7 @@ public class BackgroundAddActivity extends AppCompatActivity {
     private boolean[] daysEnable;
     private boolean enable;
 
-    int offColor = 0xff << 24 | 0x25 << 16 | 0x25 << 8 | 0x25;
+    int offColor = 0xff << 24 | 0x44 << 16 | 0x44 << 8 | 0x44;
     int onColor = 0xff << 24 | 0x38 << 16 | 0xb8 << 8 | 0xfb;
 
     @Override

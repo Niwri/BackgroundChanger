@@ -54,6 +54,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         public Switch onOff;
         public RadioButton radioDelete;
         private RecyclerView recyclerView;
+        public String directoryPath;
 
         MyViewHolder(final View view) {
             super(view);
@@ -168,6 +169,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
            }
         });
+
+        holder.directoryPath = backgroundList.get(position).getFileDirectory();
 
         //Sets up child recyclerView for weekday display
         LinearLayoutManager layoutManager = new LinearLayoutManager(holder.recyclerView.getContext(), LinearLayoutManager.HORIZONTAL, false);
