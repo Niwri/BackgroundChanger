@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
@@ -50,13 +51,13 @@ public class BackgroundAddActivity extends AppCompatActivity {
     private EditText backgroundNameField;
     private String directory;
     private ImageButton btnImage;
-    private Button btnSave, btnBack;
+    private Button btnSave, btnBack, btnAM, btnPM;
     private Button[] btnDays;
     private boolean[] daysEnable;
-    private boolean enable;
+    private boolean enable, meridiemPM;
 
-    int offColor = 0xff << 24 | 0x44 << 16 | 0x44 << 8 | 0x44;
-    int onColor = 0xff << 24 | 0x38 << 16 | 0xb8 << 8 | 0xfb;
+    int offColor = 0xff << 24 | 0xFF << 16 | 0x4B << 8 | 0x4B;
+    int onColor = 0xff << 24 | 0x4B << 16 | 0x93 << 8 | 0xFF;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +70,9 @@ public class BackgroundAddActivity extends AppCompatActivity {
         imageBitmap = null;
         Arrays.fill(daysEnable, false);
         enable = true;
+        hour = 12;
+        minute = 0;
+        meridiemPM = false;
 
         //Retrieves necessary views from the layout
         backgroundNameField = findViewById(R.id.backgroundName);
@@ -78,6 +82,9 @@ public class BackgroundAddActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if(intent.getBooleanExtra("loadData", false))
             loadExistingData();
+
+
+        setNumberPicker();
 
     }
 
@@ -129,7 +136,8 @@ public class BackgroundAddActivity extends AppCompatActivity {
             fosInfo.append("\r\n");
             fosInfo.append("Hour:" + hour + "\r\n");
             fosInfo.append("Minute:" + minute + "\r\n");
-            fosInfo.append("Enable:" + enable);
+            fosInfo.append("Enable:" + enable + "\r\n");
+            fosInfo.append("Meridiem:" + meridiemPM);
             fosInfo.close();
 
         } catch (FileNotFoundException e) {
@@ -184,6 +192,9 @@ public class BackgroundAddActivity extends AppCompatActivity {
         btnDays = new Button[]{findViewById(R.id.btnSunday), findViewById(R.id.btnMonday), findViewById(R.id.btnTuesday),
                 findViewById(R.id.btnWednesday), findViewById(R.id.btnThursday), findViewById(R.id.btnFriday),
                 findViewById(R.id.btnSaturday)};
+
+        btnAM = findViewById(R.id.btnAM);
+        btnPM = findViewById(R.id.btnPM);
 
         //Sets up the Weekday Buttons
         for(int i = 0; i < btnDays.length; i++) {
@@ -248,6 +259,70 @@ public class BackgroundAddActivity extends AppCompatActivity {
                 imageChooser();
             }
         });
+
+        btnAM.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                meridiemPM = false;
+                btnAM.setTextColor(ContextCompat.getColorStateList(getApplicationContext(), R.color.onMeridiem));
+                btnPM.setTextColor(ContextCompat.getColorStateList(getApplicationContext(), R.color.offMeridiem));
+            }
+        });
+
+        btnPM.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                meridiemPM = true;
+                btnAM.setTextColor(ContextCompat.getColorStateList(getApplicationContext(), R.color.offMeridiem));
+                btnPM.setTextColor(ContextCompat.getColorStateList(getApplicationContext(), R.color.onMeridiem));
+            }
+        });
+    }
+
+    void setNumberPicker() {
+        NumberPicker numberPickerHour = findViewById(R.id.numberHour);
+        NumberPicker numberPickerMinute = findViewById(R.id.numberMinute);
+
+        numberPickerHour.setMinValue(1);
+        numberPickerHour.setMaxValue(12);
+
+        numberPickerMinute.setMinValue(0);
+        numberPickerMinute.setMaxValue(59);
+
+        numberPickerHour.setWrapSelectorWheel(true);
+        numberPickerMinute.setWrapSelectorWheel(true);
+
+        numberPickerHour.setValue(hour);
+        numberPickerMinute.setValue(minute);
+
+        numberPickerHour.setFormatter(new NumberPicker.Formatter() {
+            @Override
+            public String format(int val) {
+                return String.format("%02d", val);
+            }
+        });
+
+        numberPickerMinute.setFormatter(new NumberPicker.Formatter() {
+            @Override
+            public String format(int val) {
+                return String.format("%02d", val);
+            }
+        });
+
+
+        numberPickerHour.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker numberPicker, int oldVal, int newVal) {
+                hour = newVal;
+            }
+        });
+
+        numberPickerMinute.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker numberPicker, int oldVal, int newVal) {
+                minute = newVal;
+            }
+        });
     }
 
     void imageChooser() {
@@ -305,11 +380,12 @@ public class BackgroundAddActivity extends AppCompatActivity {
         Intent intent = getIntent();
         backgroundName = intent.getStringExtra("backgroundName");
         daysEnable = intent.getBooleanArrayExtra("daysEnable");
-        hour = intent.getIntExtra("hour", 0);
+        hour = intent.getIntExtra("hour", 12);
         minute = intent.getIntExtra("minute", 0);
         imageBitmap = BitmapFactory.decodeFile(intent.getStringExtra("imageFilePath"));
         enable = intent.getBooleanExtra("enable", true);
-        directory = getIntent().getStringExtra("directoryName");
+        directory = intent.getStringExtra("directoryName");
+        meridiemPM = intent.getBooleanExtra("meridiem", false);
 
         //Changes views with respect to the saved data
         backgroundNameField.setText(backgroundName);
@@ -339,6 +415,13 @@ public class BackgroundAddActivity extends AppCompatActivity {
                             getApplicationContext(),
                             daysEnable[dayNum] ? R.color.onColorCircle : R.color.offColorCircle));
         }
+
+        btnPM.setTextColor(ContextCompat.getColorStateList(getApplicationContext(),
+                meridiemPM ? R.color.onMeridiem : R.color.offMeridiem));
+
+        btnAM.setTextColor(ContextCompat.getColorStateList(getApplicationContext(),
+                meridiemPM ? R.color.offMeridiem : R.color.onMeridiem));
+
 
 
 

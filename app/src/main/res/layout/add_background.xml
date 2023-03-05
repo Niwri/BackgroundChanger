@@ -25,11 +25,10 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
-        android:layout_width="390dp"
-        android:layout_height="2dp"
+        android:layout_width="0dp"
+        app:layout_constraintWidth_percent="0.9"
         android:id="@+id/lineStart"
-        android:background="@drawable/line"
-        android:backgroundTint="#333333"
+        style="@style/viewLine"
         app:layout_constraintTop_toBottomOf="@+id/constraintTitle"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -91,122 +90,119 @@
 
         <Button
             android:id="@+id/btnSunday"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="5dp"
-            android:background="@drawable/border_circle"
-            app:backgroundTint="@color/offColorCircle"
-            android:includeFontPadding="false"
-            android:minWidth="1dp"
-            android:minHeight="1dp"
-            android:paddingHorizontal="13dp"
-            android:paddingVertical="0dp"
-            android:text="S"
-            android:textColor="@color/offColor"
-            android:textSize="15sp" />
+            style="@style/btnWeekdays"
+            android:text="S"/>
 
         <Button
             android:id="@+id/btnMonday"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="5dp"
-            android:background="@drawable/border_circle"
-            app:backgroundTint="@color/offColorCircle"
-            android:includeFontPadding="false"
-            android:minWidth="1dp"
-            android:minHeight="1dp"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="0dp"
-            android:textColor="@color/offColor"
-            android:textSize="15sp"
+            style="@style/btnWeekdays"
             android:text="M"/>
 
         <Button
             android:id="@+id/btnTuesday"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="5dp"
-            android:background="@drawable/border_circle"
-            app:backgroundTint="@color/offColorCircle"
-            android:includeFontPadding="false"
-            android:minWidth="1dp"
-            android:minHeight="1dp"
-            android:paddingHorizontal="13dp"
-            android:paddingVertical="0dp"
-            android:textColor="@color/offColor"
-            android:textSize="15sp"
+            style="@style/btnWeekdays"
             android:text="T"/>
 
         <Button
             android:id="@+id/btnWednesday"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="5dp"
-            android:background="@drawable/border_circle"
-            android:includeFontPadding="false"
-            android:minWidth="1dp"
-            android:minHeight="1dp"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="0dp"
-            android:text="W"
-            android:textColor="@color/offColor"
-            android:textSize="15sp"
-            app:backgroundTint="@color/offColorCircle" />
+            style="@style/btnWeekdays"
+            android:text="W"/>
 
         <Button
             android:id="@+id/btnThursday"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="5dp"
-            android:background="@drawable/border_circle"
-            app:backgroundTint="@color/offColorCircle"
-            android:includeFontPadding="false"
-            android:minWidth="1dp"
-            android:minHeight="1dp"
-            android:paddingHorizontal="13dp"
-            android:paddingVertical="0dp"
-            android:textColor="@color/offColor"
-            android:textSize="15sp"
+            style="@style/btnWeekdays"
             android:text="T"/>
 
         <Button
             android:id="@+id/btnFriday"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="5dp"
-            android:background="@drawable/border_circle"
-            app:backgroundTint="@color/offColorCircle"
-            android:includeFontPadding="false"
-            android:minWidth="1dp"
-            android:minHeight="1dp"
-            android:paddingHorizontal="13dp"
-            android:paddingVertical="0dp"
-            android:textColor="@color/offColor"
-            android:textSize="15sp"
+            style="@style/btnWeekdays"
             android:text="F"/>
 
         <Button
             android:id="@+id/btnSaturday"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="5dp"
-            android:background="@drawable/border_circle"
-            app:backgroundTint="@color/offColorCircle"
-            android:includeFontPadding="false"
-            android:minWidth="1dp"
-            android:minHeight="1dp"
-            android:paddingHorizontal="13dp"
-            android:paddingVertical="0dp"
-            android:textColor="@color/offColor"
-            android:textSize="15sp"
+            style="@style/btnWeekdays"
             android:text="S"/>
 
+    </LinearLayout>
+
+    <View
+        android:layout_width="0dp"
+        app:layout_constraintWidth_percent="0.6"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        style="@style/viewLine"
+        app:layout_constraintBottom_toTopOf="@+id/linearTimeSelect" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearTimeSelect"
+        app:layout_constraintTop_toBottomOf="@+id/linearTwo"
+        app:layout_constraintBottom_toTopOf="@+id/btnSave"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <NumberPicker
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginRight="10dp"
+            android:theme="@style/NumberPickerHour"
+            android:id="@+id/numberHour"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=":"
+            android:textSize="30sp"
+            android:includeFontPadding="false"
+            android:textColor="#FFFFFF"/>
+
+        <NumberPicker
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:theme="@style/NumberPickerHour"
+            android:id="@+id/numberMinute"
+            android:layout_marginRight="20dp"/>
 
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/linearTime">
 
+            <Button
+                android:text="AM"
+                style="@style/btnMeridiem"
+                android:textColor="@color/onMeridiem"
+                android:id="@+id/btnAM"
+                />
+
+            <Button
+                android:text="PM"
+                style="@style/btnMeridiem"
+                android:layout_marginTop="30dp"
+                android:textColor="@color/offMeridiem"
+                android:id="@+id/btnPM"
+                />
+
+
+        </LinearLayout>
 
 
     </LinearLayout>
+
+    <View
+        android:layout_width="0dp"
+        app:layout_constraintWidth_percent="0.6"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        style="@style/viewLine"
+        app:layout_constraintTop_toBottomOf="@+id/linearTimeSelect" />
+
 
     <Button
         android:id="@+id/btnSave"

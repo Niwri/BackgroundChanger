@@ -5,12 +5,14 @@ public class Date {
     private int hour;
     private int minute;
     private int second;
+    private boolean isPM;
 
-    public Date(boolean[] days, int hour, int minute, int second) {
+    public Date(boolean[] days, int hour, int minute, int second, boolean isPM) {
         this.days = days;
         this.hour = hour;
         this.minute = minute;
         this.second = second;
+        this.isPM = isPM;
     }
 
     //Getters
@@ -22,6 +24,8 @@ public class Date {
 
     public int getSecond() { return second; }
 
+    public boolean isPM() { return isPM; }
+
     //Setters
     public void setDay(boolean[] days) { this.days = days; }
 
@@ -30,4 +34,6 @@ public class Date {
     public void setMinute(int minute) { this.minute = minute; }
 
     public void setSecond(int second) { this.second = second; }
+
+    public void setPM(boolean isPM) { this.isPM = isPM; }
 }

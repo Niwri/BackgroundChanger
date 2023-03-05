@@ -87,12 +87,13 @@ public class MainActivity extends AppCompatActivity {
                 int hour = Integer.parseInt(reader.readLine().replace("Hour:", ""));
                 int minute = Integer.parseInt(reader.readLine().replace("Minute:", ""));
                 boolean enable = reader.readLine().replace("Enable:", "").equals("true");
+                boolean meridiemPM = reader.readLine().replace("Meridiem:", "").equals("true");
 
                 //Appends BackgroundImage generated from information and image file
                 backgroundList.add(new BackgroundImage(
                         name,
                         BitmapFactory.decodeFile(directory.getPath() + "/image.png"),
-                        new Date(dayEnable, hour, minute, 0),
+                        new Date(dayEnable, hour, minute, 0, meridiemPM),
                         enable,
                         directory.getPath()));
                 information.close();

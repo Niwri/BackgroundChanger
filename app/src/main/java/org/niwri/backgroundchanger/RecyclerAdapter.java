@@ -164,6 +164,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
                intent.putExtra("imageFilePath", backgroundList.get(positionNum).getFileDirectory() + "/image.png");
                intent.putExtra("enable", backgroundList.get(positionNum).isEnabled());
                intent.putExtra("directoryName", backgroundList.get(positionNum).getFileDirectory());
+               intent.putExtra("meridiem", backgroundList.get(positionNum).getBackgroundDate().isPM());
 
                view.getContext().startActivity(intent);
 

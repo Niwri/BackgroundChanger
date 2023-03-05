@@ -8,9 +8,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#777777</color>
-    <color name="offColor">#444444</color>
-    <color name="offColorCircle">#383838</color>
-    <color name="onColorCircle">#91d6fb</color>
+    <color name="offColor">#FF4B4B</color>
+    <color name="offColorCircle">#FF6A7C</color>
+    <color name="onColorCircle">#6A82FF</color>
 
     <color name="onColorTxt">#ffffff</color>
     <color name="offColorTxt">#888888</color>
@@ -18,4 +18,7 @@
     <dimen name="paddingOfWeekdayLetters">5dp</dimen>
     <dimen name="marginOfWeekdayLetters">10dp</dimen>
     <dimen name="sizeOfWeekdayLetters">20sp</dimen>
+
+    <color name="onMeridiem">#5EA8FF</color>
+    <color name="offMeridiem">#FFFFFF</color>
 </resources>

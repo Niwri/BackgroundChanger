@@ -12,6 +12,7 @@ public class BackgroundImage {
     private Bitmap backgroundBitmap;
     private Date backgroundDate;
     private String fileDirectory;
+    private boolean isPM;
 
     public BackgroundImage(String backgroundName,
                            Bitmap backgroundBitmap,
