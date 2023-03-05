@@ -227,7 +227,7 @@ public class BackgroundAddActivity extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                btnSave.setEnabled(false);
                 //Retrieving name field
                 backgroundName = backgroundNameField.getText().toString();
 
