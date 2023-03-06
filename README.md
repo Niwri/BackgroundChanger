@@ -1,4 +1,4 @@
-# BackgroundChanger
+# BackgroundChanger v1.0
 ## Status
 COMPLETED (Minor changes and fixes to be added)
 
