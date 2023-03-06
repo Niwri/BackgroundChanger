@@ -335,7 +335,8 @@ public class BackgroundAddActivity extends AppCompatActivity {
 
         // pass the constant to compare it
         // with the returned requestCode
-        startActivityForResult(Intent.createChooser(i, "Select Picture"), 200);
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, 200);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -360,14 +361,21 @@ public class BackgroundAddActivity extends AppCompatActivity {
                     }
 
                     Bitmap imageRounded=Bitmap.createBitmap(imageBitmap.getWidth(), imageBitmap.getHeight(), imageBitmap.getConfig());
-                    Canvas canvas=new Canvas(imageRounded);
+
+                    int val = imageRounded.getWidth();
+                    if(val > imageRounded.getHeight())
+                        val = imageRounded.getHeight();
+
+                    Bitmap imageScale=Bitmap.createBitmap(imageRounded, 0, 0, val, val);
+
+                    Canvas canvas=new Canvas(imageScale);
                     Paint mpaint=new Paint();
                     mpaint.setAntiAlias(true);
                     mpaint.setShader(new BitmapShader(imageBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
-                    canvas.drawRoundRect((new RectF(0, 0, imageBitmap.getWidth(), imageBitmap.getHeight())), imageBitmap.getWidth()*0.3f, imageBitmap.getHeight()*0.3f, mpaint); // Round Image Corner 100 100 100 100
+                    canvas.drawRoundRect((new RectF(0, 0, imageScale.getWidth(), imageScale.getHeight())), imageScale.getWidth()*0.3f, imageScale.getHeight()*0.3f, mpaint); // Round Image Corner 100 100 100 100
 
                     btnImage.setImageURI(null);
-                    btnImage.setImageBitmap(imageRounded);
+                    btnImage.setImageBitmap(imageScale);
                     btnImage.setBackgroundResource(0);
                 }
             }
@@ -394,14 +402,22 @@ public class BackgroundAddActivity extends AppCompatActivity {
         btnImage.setBackgroundResource(0);
 
         Bitmap imageRounded=Bitmap.createBitmap(imageBitmap.getWidth(), imageBitmap.getHeight(), imageBitmap.getConfig());
-        Canvas canvas=new Canvas(imageRounded);
+
+        int val = imageRounded.getWidth();
+        if(val > imageRounded.getHeight())
+            val = imageRounded.getHeight();
+
+        Bitmap imageScale=Bitmap.createBitmap(imageRounded, 0, 0, val, val);
+
+        Canvas canvas=new Canvas(imageScale);
         Paint mpaint=new Paint();
         mpaint.setAntiAlias(true);
         mpaint.setShader(new BitmapShader(imageBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
-        canvas.drawRoundRect((new RectF(0, 0, imageBitmap.getWidth(), imageBitmap.getHeight())), imageBitmap.getWidth()*0.3f, imageBitmap.getHeight()*0.3f, mpaint); // Round Image Corner 100 100 100 100
+        canvas.drawRoundRect((new RectF(0, 0, imageScale.getWidth(), imageScale.getHeight())), imageScale.getWidth()*0.3f, imageScale.getHeight()*0.3f, mpaint); // Round Image Corner 100 100 100 100
 
-
-        btnImage.setImageBitmap(imageRounded);
+        btnImage.setImageURI(null);
+        btnImage.setImageBitmap(imageScale);
+        btnImage.setBackgroundResource(0);
 
         btnDays = new Button[]{findViewById(R.id.btnSunday), findViewById(R.id.btnMonday), findViewById(R.id.btnTuesday),
                 findViewById(R.id.btnWednesday), findViewById(R.id.btnThursday), findViewById(R.id.btnFriday),

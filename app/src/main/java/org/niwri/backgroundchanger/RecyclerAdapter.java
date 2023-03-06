@@ -80,19 +80,29 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     @Override
     public void onBindViewHolder(@NonNull RecyclerAdapter.MyViewHolder holder, int position) {
         holder.nameTxt.setText(backgroundList.get(position).getBackgroundName());
-        holder.timeTxt.setText(String.format("%02d", backgroundList.get(position).getBackgroundDate().getHour())
+        int hour = backgroundList.get(position).getBackgroundDate().getHour();
+        boolean pm = backgroundList.get(position).getBackgroundDate().isPM();
+        if(hour == 12 && !pm) hour = 0;
+        holder.timeTxt.setText(String.format("%02d", hour + (pm ? 1 : 0) * 12)
                 + ":" +
                 String.format("%02d", backgroundList.get(position).getBackgroundDate().getMinute()));
 
         Bitmap mbitmap = backgroundList.get(position).getBackgroundBitmap();
         Bitmap imageRounded=Bitmap.createBitmap(mbitmap.getWidth(), mbitmap.getHeight(), mbitmap.getConfig());
-        Canvas canvas=new Canvas(imageRounded);
+
+        int val = imageRounded.getWidth();
+        if(val > imageRounded.getHeight())
+            val = imageRounded.getHeight();
+
+        Bitmap imageScale=Bitmap.createBitmap(imageRounded, 0, 0, val, val);
+        Canvas canvas=new Canvas(imageScale);
         Paint mpaint=new Paint();
         mpaint.setAntiAlias(true);
         mpaint.setShader(new BitmapShader(mbitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
-        canvas.drawRoundRect((new RectF(0, 0, mbitmap.getWidth(), mbitmap.getHeight())), mbitmap.getWidth()*0.3f, mbitmap.getHeight()*0.3f, mpaint); // Round Image Corner 100 100 100 100
+        canvas.drawRoundRect((new RectF(0, 0, imageScale.getWidth(), imageScale.getHeight())), imageScale.getWidth()*0.3f, imageScale.getHeight()*0.3f, mpaint); // Round Image Corner 100 100 100 100
 
-        holder.backgroundImg.setImageBitmap(imageRounded);
+        holder.backgroundImg.setImageBitmap(imageScale);
+
         holder.onOff.setChecked(backgroundList.get(position).isEnabled());
 
         holder.nameTxt.setTextColor(ContextCompat.getColorStateList(

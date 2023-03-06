@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
@@ -19,11 +18,13 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private ArrayList<BackgroundImage> backgroundList;
+    private static ArrayList<BackgroundImage> backgroundList;
     private RecyclerView recyclerView;
     public static ArrayList<RecyclerAdapter.MyViewHolder> holderList;
 
@@ -44,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
         setAdapter();
 
         setButtons();
+
+        Intent intent = new Intent(this, BackgroundService.class);
+        startService(intent);
     }
 
     //Sets up RecyclerView for list of background alarms
@@ -93,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 backgroundList.add(new BackgroundImage(
                         name,
                         BitmapFactory.decodeFile(directory.getPath() + "/image.png"),
-                        new Date(dayEnable, hour, minute, 0, meridiemPM),
+                        new BackgroundDate(dayEnable, hour, minute, 0, meridiemPM),
                         enable,
                         directory.getPath()));
                 information.close();
@@ -163,4 +167,6 @@ public class MainActivity extends AppCompatActivity {
         file.delete();
 
     }
+
+    public static ArrayList<BackgroundImage> getBackgroundList() { return backgroundList; }
 }

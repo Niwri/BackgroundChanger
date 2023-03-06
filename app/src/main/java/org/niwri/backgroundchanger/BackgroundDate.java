@@ -1,13 +1,13 @@
 package org.niwri.backgroundchanger;
 
-public class Date {
+public class BackgroundDate {
     private boolean[] days;
     private int hour;
     private int minute;
     private int second;
     private boolean isPM;
 
-    public Date(boolean[] days, int hour, int minute, int second, boolean isPM) {
+    public BackgroundDate(boolean[] days, int hour, int minute, int second, boolean isPM) {
         this.days = days;
         this.hour = hour;
         this.minute = minute;
