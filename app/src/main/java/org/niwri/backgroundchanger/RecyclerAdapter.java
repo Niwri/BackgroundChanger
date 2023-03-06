@@ -82,7 +82,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         holder.nameTxt.setText(backgroundList.get(position).getBackgroundName());
         int hour = backgroundList.get(position).getBackgroundDate().getHour();
         boolean pm = backgroundList.get(position).getBackgroundDate().isPM();
-        if(hour == 12 && !pm) hour = 0;
+        if(hour == 12) hour -= 12;
         holder.timeTxt.setText(String.format("%02d", hour + (pm ? 1 : 0) * 12)
                 + ":" +
                 String.format("%02d", backgroundList.get(position).getBackgroundDate().getMinute()));

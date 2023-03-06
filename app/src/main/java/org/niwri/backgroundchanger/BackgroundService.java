@@ -56,8 +56,14 @@ public class BackgroundService extends Service {
 
         int meridiem = background.getBackgroundDate().isPM() ? 1 : 0;
 
+        if(backgroundHour == 12)
+            backgroundHour = 0;
+
         int backgroundMinute = background.getBackgroundDate().getMinute();
         boolean[] days = background.getBackgroundDate().getDay();
+
+        if(background.isEnabled() == false)
+            return;
 
         if(!days[currentTime.get(Calendar.DAY_OF_WEEK)-1])
             return;
