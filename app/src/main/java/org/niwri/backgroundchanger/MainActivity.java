@@ -5,9 +5,12 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -29,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<RecyclerAdapter.MyViewHolder> holderList;
 
     private String[] days = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
-
+    private  Intent serviceIntent;
     int SELECT_PICTURE = 200;
 
     @Override
@@ -46,8 +49,33 @@ public class MainActivity extends AppCompatActivity {
 
         setButtons();
 
-        Intent intent = new Intent(this, BackgroundService.class);
-        startService(intent);
+        serviceIntent = new Intent(this, BackgroundService.class);
+        if(isMyServiceRunning(BackgroundService.class) == false) {
+            Log.i("Service", "Started");
+            startService(serviceIntent);
+        }
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                Log.i ("Service status", "Running");
+                return true;
+            }
+        }
+        Log.i ("Service status", "Not running");
+        return false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        stopService(serviceIntent);
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction("restartservice");
+        broadcastIntent.setClass(this, Restarter.class);
+        this.sendBroadcast(broadcastIntent);
+        super.onDestroy();
     }
 
     //Sets up RecyclerView for list of background alarms
